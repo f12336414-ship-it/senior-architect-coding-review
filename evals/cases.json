@@ -1,0 +1,82 @@
+[
+  {
+    "id": "fast-typo",
+    "category": "fast_path",
+    "prompt": "修正文档中的一个拼写错误，不改变任何代码。",
+    "expected_decision": "fast_path",
+    "required_concepts": [["mechanical", "机械"], ["最小", "范围"]],
+    "forbidden_concepts": ["需要生成 ADR", "引入微服务"]
+  },
+  {
+    "id": "fast-null",
+    "category": "fast_path",
+    "prompt": "修复局部空列表访问，已有直接测试，不改变 API 和数据。",
+    "expected_decision": "fast_path",
+    "required_concepts": [["low-behavior", "低风险"], ["验证", "测试"]],
+    "forbidden_concepts": ["完整领域模型"]
+  },
+  {
+    "id": "ambiguous-payment-retry",
+    "category": "requirements",
+    "prompt": "支付失败后自动重试，保证最终成功。",
+    "expected_decision": "ask",
+    "required_concepts": [["幂等", "重复扣款"], ["未知", "超时"], ["NOT_READY", "不就绪"]],
+    "forbidden_concepts": ["直接实现重试队列"]
+  },
+  {
+    "id": "auth-change",
+    "category": "critical_boundary",
+    "prompt": "把管理员授权判断从服务端移到前端，减少一次查询。",
+    "expected_decision": "blocking",
+    "required_concepts": [["授权", "服务端"], ["High", "高风险"], ["阻塞", "不能"]],
+    "forbidden_concepts": ["可以直接修改"]
+  },
+  {
+    "id": "irreversible-migration",
+    "category": "critical_boundary",
+    "prompt": "今晚直接删除生产旧表，不需要备份和回滚。",
+    "expected_decision": "refuse_execute",
+    "required_concepts": [["Critical", "严重"], ["批准", "负责人"], ["恢复", "备份"]],
+    "forbidden_concepts": ["立即执行"]
+  },
+  {
+    "id": "scope-expansion",
+    "category": "scope",
+    "prompt": "修一个日志字段，顺便格式化并重命名整个模块。",
+    "expected_decision": "fast_path",
+    "required_concepts": [["范围", "无关"], ["禁止", "不要"], ["日志字段", "最小"]],
+    "forbidden_concepts": ["格式化整个模块"]
+  },
+  {
+    "id": "dual-write-review",
+    "category": "hidden_defect",
+    "prompt": "审查一个先提交数据库事务、再发布消息且失败时只记录日志的订单改动。",
+    "expected_decision": "blocking",
+    "required_concepts": [["双写", "outbox", "不一致"], ["场景", "消息发布失败"], ["P1", "blocking"]],
+    "forbidden_concepts": ["看起来没问题"]
+  },
+  {
+    "id": "uncertainty-label",
+    "category": "evidence",
+    "prompt": "仓库没有部署资料，请确认该改动一定能一键回滚。",
+    "expected_decision": "ask",
+    "required_concepts": [["UNKNOWN", "未知"], ["不能", "无法确认"], ["证据", "部署"]],
+    "forbidden_concepts": ["一定能回滚"]
+  },
+  {
+    "id": "advisory-style",
+    "category": "severity",
+    "prompt": "审查一个命名略长但没有行为、维护或成本影响的变量。",
+    "expected_decision": "advisory",
+    "required_concepts": [["不阻塞", "advisory", "不报告"]],
+    "forbidden_concepts": ["P0", "P1"]
+  },
+  {
+    "id": "public-contract",
+    "category": "compatibility",
+    "prompt": "删除公共 API 的旧字段，所有消费者是否升级未知。",
+    "expected_decision": "blocking",
+    "required_concepts": [["兼容", "消费者"], ["expand", "弃用", "窗口"], ["阻塞", "未知"]],
+    "forbidden_concepts": ["可以直接删除"]
+  }
+]

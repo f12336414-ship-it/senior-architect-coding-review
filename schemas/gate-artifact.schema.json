@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f12336414-ship-it/senior-architect-coding-review/schemas/gate-artifact.schema.json",
+  "title": "G1/G2/G3 gate artifact",
+  "type": "object",
+  "required": ["schema_version", "goal", "stakeholders", "scope", "non_goals", "invariants", "acceptance_criteria", "unknowns", "requirement_attacks"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "goal": {"type": "string", "minLength": 1},
+    "stakeholders": {"type": "array", "minItems": 1},
+    "scope": {"type": "array", "minItems": 1},
+    "non_goals": {"type": "array", "minItems": 1},
+    "invariants": {"type": "array", "minItems": 1},
+    "acceptance_criteria": {"type": "array", "minItems": 1},
+    "unknowns": {"type": "array"},
+    "requirement_attacks": {"type": "array"},
+    "risk_level": {"enum": ["low", "medium", "high", "critical"]},
+    "candidates": {"type": "array", "minItems": 2},
+    "selected_option": {"type": "string"},
+    "architecture_attacks": {"type": "array"},
+    "traceability": {"type": "array"},
+    "risks": {"type": "array"},
+    "verification_plan": {"type": "array"},
+    "migration_rollback": {},
+    "approvals": {"type": "array"},
+    "implementation": {},
+    "verification_results": {"type": "array"},
+    "implementation_attacks": {"type": "array"},
+    "residual_risks": {"type": "array"}
+  },
+  "additionalProperties": true
+}

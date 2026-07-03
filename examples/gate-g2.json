@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "goal": "防止同一支付意图重复扣款",
+  "stakeholders": ["payments domain owner", "finance operations"],
+  "scope": ["payment submission and timeout recovery"],
+  "non_goals": ["replace payment provider"],
+  "invariants": [{"id": "INV-1", "statement": "一个支付意图最多成功一次"}],
+  "acceptance_criteria": [{"id": "AC-1", "statement": "重复请求收敛到同一支付结果"}],
+  "unknowns": [],
+  "requirement_attacks": [],
+  "risk_level": "high",
+  "candidates": [{"id": "A", "name": "provider idempotency key"}, {"id": "B", "name": "local deduplication only"}],
+  "selected_option": "A",
+  "architecture_attacks": [],
+  "traceability": [{"requirement": "AC-1", "invariant": "INV-1", "decision": "A", "implementation": "PaymentIntent.idempotency_key", "verification": "duplicate and timeout integration tests", "owner": "payments"}],
+  "risks": [{"id": "R-1", "statement": "provider result can be temporarily unknown"}],
+  "verification_plan": ["duplicate submission", "timeout after provider commit", "reconciliation"],
+  "migration_rollback": "feature flag new recovery path; no schema contraction until reconciliation reaches threshold",
+  "approvals": [{"role": "domain_owner", "identity": "payments-team", "scope": "payment idempotency design at this commit", "timestamp": "2026-07-04T00:00:00Z", "status": "approved", "evidence": "PR approval by payments owner"}]
+}

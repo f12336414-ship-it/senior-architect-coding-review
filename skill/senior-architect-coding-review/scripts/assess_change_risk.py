@@ -12,7 +12,8 @@ LEVELS = ("low", "medium", "high", "critical")
 RANK = {level: index for index, level in enumerate(LEVELS)}
 
 CHOICES = {
-    "environment": ("local", "test", "staging", "production", "unknown"),
+    "profile": ("general", "finance", "healthcare", "saas-multitenant", "internal", "unknown"),
+    "environment": ("local", "ci-fork", "ci-trusted", "test", "staging", "production", "unknown"),
     "requirements": ("clear", "partial", "conflicting", "unknown"),
     "blast_radius": ("local", "module", "service", "multi-system", "unknown"),
     "data": ("none", "read", "write", "migration", "irreversible", "unknown"),
@@ -29,9 +30,12 @@ CHOICES = {
     "rollback": ("easy", "coordinated", "hard", "irreversible", "unknown"),
     "observability": ("strong", "partial", "weak", "unknown"),
     "novelty": ("known", "some", "new", "unknown"),
+    "agent_permissions": ("read-only", "workspace-write", "external-write", "privileged", "unknown"),
+    "supply_chain": ("none", "dependency-change", "untrusted-code", "unknown"),
 }
 
 FLOORS = {
+    "profile": {"unknown": "medium"},
     "environment": {"unknown": "medium"},
     "requirements": {
         "partial": "medium",
@@ -66,6 +70,16 @@ FLOORS = {
     },
     "observability": {"partial": "medium", "weak": "high", "unknown": "medium"},
     "novelty": {"new": "medium", "unknown": "medium"},
+    "agent_permissions": {
+        "external-write": "high",
+        "privileged": "critical",
+        "unknown": "high",
+    },
+    "supply_chain": {
+        "dependency-change": "medium",
+        "untrusted-code": "high",
+        "unknown": "high",
+    },
 }
 
 BASE_CONTROLS = {
@@ -141,6 +155,15 @@ def classify(values: Mapping[str, str]) -> dict[str, object]:
     ):
         level = "critical"
         combination_reasons.append("breaking change can reach production consumers")
+    if normalized["profile"] == "finance" and normalized["data"] in {"write", "migration", "irreversible"}:
+        level = _max_level(level, "high")
+        combination_reasons.append("financial data mutation requires ledger-grade controls")
+    if normalized["profile"] == "healthcare" and normalized["security"] in {"sensitive", "auth", "regulated"}:
+        level = _max_level(level, "high")
+        combination_reasons.append("healthcare sensitive-data boundary requires specialist review")
+    if normalized["profile"] == "saas-multitenant" and normalized["security"] in {"sensitive", "auth", "unknown"}:
+        level = _max_level(level, "high")
+        combination_reasons.append("multi-tenant boundary requires tenant-isolation evidence")
 
     controls = list(BASE_CONTROLS[level])
     if normalized["requirements"] != "clear":
@@ -153,6 +176,18 @@ def classify(values: Mapping[str, str]) -> dict[str, object]:
         controls += ["threat model", "authorization and abuse-case tests"]
     if normalized["availability"] != "none":
         controls += ["capacity and dependency-failure tests"]
+    if normalized["profile"] == "finance":
+        controls += ["ledger reconciliation", "segregation-of-duties approval"]
+    if normalized["profile"] == "healthcare":
+        controls += ["privacy and audit review", "data-retention verification"]
+    if normalized["profile"] == "saas-multitenant":
+        controls += ["cross-tenant authorization tests", "tenant-scoped observability"]
+    if normalized["supply_chain"] != "none":
+        controls += ["provenance, license, lockfile, and behavior-diff review"]
+    if normalized["agent_permissions"] in {"external-write", "privileged"}:
+        controls += ["least-privilege tool policy", "separate review and write credentials"]
+    elif normalized["agent_permissions"] == "workspace-write":
+        controls += ["explicit allowed paths and final diff review"]
 
     unknowns = [name for name, value in normalized.items() if value == "unknown"]
     approval_required = level in {"high", "critical"}

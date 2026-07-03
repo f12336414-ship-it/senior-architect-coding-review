@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "allowed_paths": ["infra"],
+  "actions": [
+    {
+      "id": "A1",
+      "category": "deployment",
+      "operation": "update staging deployment manifest",
+      "target": "infra/staging.yaml",
+      "irreversible": false,
+      "recovery_plan": "revert the manifest commit and redeploy the previous digest",
+      "approval": {
+        "status": "approved",
+        "role": "risk_owner",
+        "timestamp": "2026-07-04T00:00:00Z",
+        "evidence": "change-ticket-1"
+      }
+    }
+  ]
+}

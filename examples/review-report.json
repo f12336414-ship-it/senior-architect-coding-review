@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "mode": "standard",
+  "permission": "review-only",
+  "risk_level": "high",
+  "summary": "发现一个会造成重复扣款的阻塞问题。",
+  "findings": [
+    {
+      "id": "F-001",
+      "title": "超时后无条件重试非幂等支付",
+      "severity": "P1",
+      "disposition": "blocking",
+      "confidence": "high",
+      "locations": [{"path": "src/payments/retry.py", "line": 42}],
+      "scenario": "提供方成功扣款但响应超时，调用方再次创建支付。",
+      "impact": "客户被重复扣款，账务需要人工补偿。",
+      "evidence": ["重试创建新 provider request id", "代码路径没有幂等键或状态查询"],
+      "minimal_fix": "复用支付意图幂等键，并对未知提交结果先查询/恢复而不是创建新支付。"
+    }
+  ],
+  "verification": [{"command": "pytest tests/payments", "status": "not-run"}],
+  "residual_risks": ["尚未获得支付提供方幂等协议文档"]
+}

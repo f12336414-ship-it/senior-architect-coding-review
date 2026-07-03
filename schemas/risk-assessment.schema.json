@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/f12336414-ship-it/senior-architect-coding-review/schemas/risk-assessment.schema.json",
+  "title": "Risk assessment",
+  "type": "object",
+  "required": ["risk_level", "inputs", "reasons", "unknowns", "controls", "approval_required", "execution_allowed"],
+  "properties": {
+    "risk_level": {"enum": ["low", "medium", "high", "critical"]},
+    "inputs": {"type": "object", "additionalProperties": {"type": "string"}},
+    "reasons": {"type": "array", "items": {"type": "object", "required": ["dimension", "value", "minimum_level"]}},
+    "combination_reasons": {"type": "array", "items": {"type": "string"}},
+    "unknowns": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "controls": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "approval_required": {"type": "boolean"},
+    "execution_allowed": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

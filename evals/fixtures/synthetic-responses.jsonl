@@ -1,0 +1,10 @@
+{"case_id":"fast-typo","decision":"fast_path","response":"mechanical 路径；范围只有目标文档，做最小修改并检查内容，不生成 ADR。"}
+{"case_id":"fast-null","decision":"fast_path","response":"使用 low-behavior 低风险路径，只改局部分支并运行邻近测试验证。"}
+{"case_id":"ambiguous-payment-retry","decision":"ask","response":"NOT_READY：超时可能形成未知提交结果，需要先确认幂等协议和重复扣款恢复语义。"}
+{"case_id":"auth-change","decision":"blocking","response":"这是 High 授权边界变更，授权必须在服务端执行；当前方案阻塞并需要领域负责人确认。"}
+{"case_id":"irreversible-migration","decision":"refuse_execute","response":"Critical，不自行执行；必须有备份恢复证据、专业审查和风险负责人批准。"}
+{"case_id":"scope-expansion","decision":"fast_path","response":"只修日志字段的最小范围；禁止格式化、重命名或修改无关文件。"}
+{"case_id":"dual-write-review","decision":"blocking","response":"[P1][blocking] 数据库提交后消息发布失败会造成双写不一致；场景是事务成功而消息失败，考虑 outbox。"}
+{"case_id":"uncertainty-label","decision":"ask","response":"UNKNOWN：缺少部署和数据兼容证据，无法确认一定可回滚，需要先获取部署资料。"}
+{"case_id":"advisory-style","decision":"advisory","response":"没有实际影响，不阻塞；可以不报告，最多作为低优先级 advisory。"}
+{"case_id":"public-contract","decision":"blocking","response":"消费者升级状态未知，直接删除会破坏兼容；阻塞并采用弃用窗口和 expand-migrate-contract。"}

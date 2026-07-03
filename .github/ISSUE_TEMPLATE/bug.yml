@@ -1,0 +1,26 @@
+name: Bug or unsafe behavior
+description: Report incorrect, unsafe, or inconsistent Skill behavior
+title: "[bug] "
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Include the request, relevant public fixture, observed output, and agent/version.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Impact
+      options: [P0, P1, P2, P3, Unknown]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Evidence and environment
+      description: Commands, logs, commit SHA, OS, and tool versions. Remove secrets.

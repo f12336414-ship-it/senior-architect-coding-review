@@ -1,0 +1,32 @@
+# C# / .NET 专项审查
+
+只对实际使用的 .NET、ASP.NET Core、EF Core 和托管服务路径应用以下检查。
+
+## 数据与 EF Core
+
+- 检查循环或序列化过程中的延迟查询、导航属性和 N+1；用 SQL 日志或查询计数证明。
+- 确认 `DbContext` 通常按请求/工作单元 scoped，未被 singleton、后台线程或并行任务共享。
+- 检查 LINQ 是否能下推到数据库，是否过早 `ToList`、客户端求值或加载无界结果。
+- 检查分页稳定排序、批量写入、并发令牌、事务范围和迁移兼容窗口。
+
+## 异步与生命周期
+
+- 异步链避免 `.Result`、`.Wait()` 和不必要的 `Task.Run`；库代码按项目惯例处理同步上下文。
+- `CancellationToken` 从入口传递到数据库、HTTP、队列和长任务；不要用新 token 静默截断取消。
+- 检查 fire-and-forget、作用域服务逃逸、未观察异常和请求结束后的后台工作。
+- `BackgroundService`/`IHostedService` 响应停止 token，限制循环、等待子任务并在关闭预算内清理资源。
+
+## ASP.NET Core 与依赖注入
+
+- 检查中间件顺序，尤其异常处理、转发头、路由、CORS、认证、授权和端点。
+- singleton 不持有 scoped/transient 的请求状态；工厂创建的 scope 被正确释放。
+- 使用 `IHttpClientFactory` 或等价生命周期管理，设置端到端超时，避免无界重试和 socket/DNS 问题。
+- Options 在启动或使用边界验证，区分缺失、非法和动态更新语义。
+
+## 类型、错误与日志
+
+- Nullable Reference Types 不以大量 `!`、禁用警告或伪造非空掩盖边界问题。
+- 异常映射保持稳定错误契约，不泄漏堆栈、秘密或内部类型。
+- 结构化日志使用稳定字段，避免字符串插值丢失结构；包含关联、业务结果和版本，避免敏感数据。
+
+优先运行 `dotnet build`、`dotnet test`、项目分析器和必要的数据库集成测试。

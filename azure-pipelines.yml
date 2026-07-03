@@ -1,0 +1,26 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.12"
+  - script: pip install -r requirements-dev.txt
+    displayName: Development dependencies
+  - script: python -m unittest discover -s skill/senior-architect-coding-review/scripts/tests -v
+    displayName: Unit tests
+  - script: python -m unittest discover -s evals -p "test_*.py" -v
+    displayName: Evaluation tests
+  - script: python -m unittest discover -s tools -p "test_*.py" -v
+    displayName: CI gate tests
+  - script: python evals/run_evals.py --responses evals/fixtures/synthetic-responses.jsonl
+    displayName: Synthetic behavioral baseline
+  - script: python tools/validate_repository.py
+    displayName: Repository validation
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: evals/fixtures
+      ArtifactName: evaluation-fixtures

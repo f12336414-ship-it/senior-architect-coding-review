@@ -28,6 +28,8 @@
 - 缺少领域、安全、运维或合规负责人。
 - 重大残余风险没有授权接受者。
 - 方案作者同时充当唯一审查和批准者。
+- Agent 拥有外部写入、生产、凭证或特权工具权限。
+- 新依赖、不可信代码、第三方 Skill/Action 或供应链来源发生变化。
 
 总风险取各类风险的最高等级，并应用不可逆、安全、数据和生产组合升级规则；不要用低风险项平均掉高风险项。
 
@@ -53,6 +55,7 @@
 
 ```bash
 python scripts/assess_change_risk.py \
+  --profile saas-multitenant \
   --environment production \
   --requirements clear \
   --blast-radius service \
@@ -62,7 +65,9 @@ python scripts/assess_change_risk.py \
   --availability degraded \
   --rollback coordinated \
   --observability partial \
-  --novelty some
+  --novelty some \
+  --agent-permissions workspace-write \
+  --supply-chain dependency-change
 ```
 
 未提供的输入默认为 `unknown` 并提高风险，而不是默认安全。脚本输出是最低控制要求，不替代项目事实和授权人的判断。
@@ -101,3 +106,5 @@ python scripts/assess_change_risk.py \
 ## 风险降低证据
 
 成熟模式、强契约测试、可执行架构规则、可观测性、可逆发布和已演练恢复可以降低执行风险，但不能自动消除需求冲突、监管要求或不可逆后果。
+
+行业和权限 profile 见 [risk-profiles.md](risk-profiles.md)。风险降级必须引用新增证据和批准者，不能只因代码行数减少、模型更有信心或测试数量增加。

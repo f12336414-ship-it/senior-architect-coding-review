@@ -1,0 +1,30 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Development dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Unit tests
+        run: python -m unittest discover -s skill/senior-architect-coding-review/scripts/tests -v
+      - name: Evaluation harness tests
+        run: python -m unittest discover -s evals -p "test_*.py" -v
+      - name: CI gate tests
+        run: python -m unittest discover -s tools -p "test_*.py" -v
+      - name: Synthetic behavioral baseline
+        run: python evals/run_evals.py --responses evals/fixtures/synthetic-responses.jsonl
+      - name: Repository validation
+        run: python tools/validate_repository.py

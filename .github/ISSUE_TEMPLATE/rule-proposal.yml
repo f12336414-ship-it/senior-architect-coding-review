@@ -1,0 +1,25 @@
+name: Rule or framework proposal
+description: Propose a review rule with a reproducible scenario and false-positive boundary
+title: "[rule] "
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: Stack and scenario
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Failure mechanism and impact
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Evidence and validation
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: False-positive boundary
+    validations:
+      required: true

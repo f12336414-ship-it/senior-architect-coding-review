@@ -70,7 +70,7 @@ def validate(data: dict[str, Any], gate: str) -> list[str]:
                 continue
             if item.get("decision_impact") not in {"blocking", "non_blocking"}:
                 errors.append(f"unknown has invalid decision_impact: {item.get('id', index)}")
-            if item.get("status") not in {"open", "resolved", "accepted"}:
+            if item.get("status") not in {"open", "resolved", "accepted", "obsolete"}:
                 errors.append(f"unknown has invalid status: {item.get('id', index)}")
             if item.get("decision_impact") == "blocking" and item.get("status") not in {
                 "resolved",
@@ -79,6 +79,13 @@ def validate(data: dict[str, Any], gate: str) -> list[str]:
                 errors.append(f"blocking unknown remains open: {item.get('id', index)}")
             if item.get("status") == "accepted" and not item.get("owner"):
                 errors.append(f"accepted unknown lacks owner: {item.get('id', index)}")
+            if item.get("decision_impact") == "blocking" and item.get("status") == "accepted":
+                accepted_by = item.get("accepted_by")
+                required = ("role", "identity", "scope", "timestamp", "evidence")
+                if not isinstance(accepted_by, dict) or accepted_by.get("role") != "risk_owner":
+                    errors.append(f"blocking unknown acceptance requires risk_owner: {item.get('id', index)}")
+                elif any(not accepted_by.get(field) for field in required):
+                    errors.append(f"blocking unknown acceptance evidence incomplete: {item.get('id', index)}")
 
     for field in ("requirement_attacks", "architecture_attacks", "implementation_attacks"):
         attacks = data.get(field, [])
@@ -147,8 +154,9 @@ def validate(data: dict[str, Any], gate: str) -> list[str]:
                 continue
             if approval.get("status") != "approved":
                 errors.append(f"approval is not approved: {approval.get('role', index)}")
-            if not approval.get("evidence"):
-                errors.append(f"approval lacks evidence: {approval.get('role', index)}")
+            for field in ("identity", "scope", "timestamp", "evidence"):
+                if not approval.get(field):
+                    errors.append(f"approval lacks {field}: {approval.get('role', index)}")
             if approval.get("status") == "approved" and approval.get("role"):
                 approved_roles.add(str(approval["role"]))
         risk_level = data.get("risk_level")
@@ -162,29 +170,51 @@ def validate(data: dict[str, Any], gate: str) -> list[str]:
     return errors
 
 
+def describe_error(message: str) -> dict[str, str]:
+    if "approval" in message:
+        category, code, suggestion = "approval", "APPROVAL_MISSING", "record identity, role, scope, UTC timestamp, and evidence"
+    elif "attack" in message:
+        category, code, suggestion = "risk", "RISK_NOT_CLOSED", "close the attack with evidence or escalate it to an authorized owner"
+    elif "unknown" in message:
+        category, code, suggestion = "requirements", "UNKNOWN_UNRESOLVED", "resolve, explicitly accept, or reclassify the unknown"
+    elif "traceability" in message or "residual_risks" in message:
+        category, code, suggestion = "evidence", "EVIDENCE_INCOMPLETE", "add the missing owner, verification, threshold, or reevaluation evidence"
+    else:
+        category, code, suggestion = "format", "ARTIFACT_INVALID", "fix the reported field or value"
+    return {"category": category, "code": code, "severity": "error", "message": message, "suggestion": suggestion}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Validate structural completeness of a G1, G2, or G3 artifact."
     )
-    parser.add_argument("artifact", type=Path)
+    parser.add_argument("artifacts", type=Path, nargs="+")
     parser.add_argument("--gate", choices=("G1", "G2", "G3"), required=True)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    try:
-        data = json.loads(args.artifact.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
-        parser.error(str(error))
-    if not isinstance(data, dict):
-        parser.error("artifact root must be an object")
-
-    errors = validate(data, args.gate)
-    print(
-        json.dumps(
-            {"gate": args.gate, "valid": not errors, "errors": errors},
-            indent=2,
-            ensure_ascii=False,
+    results: list[dict[str, Any]] = []
+    for artifact in args.artifacts:
+        try:
+            data = json.loads(artifact.read_text(encoding="utf-8"))
+            if not isinstance(data, dict):
+                raise ValueError("artifact root must be an object")
+            errors = validate(data, args.gate)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+            errors = [str(error)]
+        results.append(
+            {
+                "artifact": str(artifact),
+                "gate": args.gate,
+                "valid": not errors,
+                "issues": [describe_error(error) for error in errors],
+            }
         )
-    )
-    raise SystemExit(1 if errors else 0)
+    result = {"valid": all(item["valid"] for item in results), "results": results}
+    rendered = json.dumps(result, indent=2, ensure_ascii=False)
+    if args.output:
+        args.output.write_text(rendered + "\n", encoding="utf-8")
+    print(rendered)
+    raise SystemExit(0 if result["valid"] else 1)
 
 
 if __name__ == "__main__":

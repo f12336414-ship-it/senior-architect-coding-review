@@ -13,11 +13,13 @@ sys.path.insert(0, str(SCRIPTS))
 
 from assess_change_risk import RANK, classify  # noqa: E402
 from detect_project_capabilities import discover  # noqa: E402
+from validate_action_plan import validate_action_plan  # noqa: E402
 from validate_artifact_structure import validate  # noqa: E402
 
 
 def safe_values(**overrides: str) -> dict[str, str]:
     values = {
+        "profile": "general",
         "environment": "production",
         "requirements": "clear",
         "blast_radius": "local",
@@ -28,6 +30,8 @@ def safe_values(**overrides: str) -> dict[str, str]:
         "rollback": "easy",
         "observability": "strong",
         "novelty": "known",
+        "agent_permissions": "workspace-write",
+        "supply_chain": "none",
     }
     values.update(overrides)
     return values
@@ -56,6 +60,13 @@ class RiskClassificationTests(unittest.TestCase):
         self.assertFalse(result["execution_allowed"])
         self.assertIn("requirements", result["unknowns"])
 
+    def test_finance_write_and_privileged_agent_escalate(self) -> None:
+        finance = classify(safe_values(profile="finance", data="write"))
+        privileged = classify(safe_values(agent_permissions="privileged"))
+        self.assertGreaterEqual(RANK[finance["risk_level"]], RANK["high"])
+        self.assertIn("ledger reconciliation", finance["controls"])
+        self.assertEqual(privileged["risk_level"], "critical")
+
 
 class ArtifactValidationTests(unittest.TestCase):
     def valid_g1(self) -> dict[str, object]:
@@ -79,6 +90,18 @@ class ArtifactValidationTests(unittest.TestCase):
             {"id": "U-1", "decision_impact": "blocking", "status": "open"}
         ]
         self.assertTrue(any("blocking unknown" in error for error in validate(data, "G1")))
+
+    def test_blocking_unknown_acceptance_requires_risk_owner_evidence(self) -> None:
+        data = self.valid_g1()
+        data["unknowns"] = [
+            {
+                "id": "U-1",
+                "decision_impact": "blocking",
+                "status": "accepted",
+                "owner": "team",
+            }
+        ]
+        self.assertTrue(any("risk_owner" in error for error in validate(data, "G1")))
 
     def test_closed_attack_requires_evidence(self) -> None:
         data = self.valid_g1()
@@ -111,6 +134,9 @@ class ArtifactValidationTests(unittest.TestCase):
                 "approvals": [
                     {
                         "role": "domain_owner",
+                        "identity": "payments-team",
+                        "scope": "payment submission design",
+                        "timestamp": "2026-07-04T00:00:00Z",
                         "status": "approved",
                         "evidence": "approval-123",
                     }
@@ -170,6 +196,72 @@ class CapabilityDiscoveryTests(unittest.TestCase):
             self.assertEqual(result["package_scripts"][0]["scripts"], ["build", "test"])
             self.assertEqual(result["architecture_controls"][0]["tool"], "dependency-cruiser")
 
+    def test_detects_pipeline_infrastructure_and_migration(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / ".github" / "workflows").mkdir(parents=True)
+            (root / ".github" / "workflows" / "ci.yml").write_text("name: ci", encoding="utf-8")
+            (root / "Dockerfile").write_text("FROM python:3.12", encoding="utf-8")
+            (root / "alembic.ini").write_text("[alembic]", encoding="utf-8")
+            result = discover(root)
+            self.assertEqual(result["pipelines"][0]["platform"], "GitHub Actions")
+            self.assertEqual(result["infrastructure"][0]["tool"], "Docker")
+            self.assertEqual(result["migrations"][0]["tool"], "Alembic")
+
+
+class ActionPlanTests(unittest.TestCase):
+    def test_out_of_scope_and_test_bypass_are_blocked(self) -> None:
+        issues = validate_action_plan(
+            {
+                "allowed_paths": ["src"],
+                "actions": [
+                    {
+                        "id": "A1",
+                        "category": "file",
+                        "target": "other/file.py",
+                        "out_of_scope": True,
+                        "bypasses_tests": True,
+                    }
+                ],
+            }
+        )
+        codes = {issue["code"] for issue in issues}
+        self.assertTrue({"OUT_OF_SCOPE", "GUARDRAIL_BYPASS", "TARGET_OUTSIDE_SCOPE"} <= codes)
+
+    def test_destructive_command_requires_complete_approval_and_recovery(self) -> None:
+        issues = validate_action_plan(
+            {
+                "allowed_paths": ["tmp"],
+                "actions": [
+                    {"id": "A1", "category": "file", "target": "tmp", "command": "rm -rf tmp"}
+                ],
+            }
+        )
+        codes = {issue["code"] for issue in issues}
+        self.assertTrue({"APPROVAL_REQUIRED", "RECOVERY_REQUIRED", "DESTRUCTIVE_FILE"} <= codes)
+
+    def test_approved_sensitive_action_can_pass_structural_policy(self) -> None:
+        issues = validate_action_plan(
+            {
+                "allowed_paths": ["infra"],
+                "actions": [
+                    {
+                        "id": "A1",
+                        "category": "deployment",
+                        "target": "infra/staging.yaml",
+                        "recovery_plan": "revert the manifest commit",
+                        "approval": {
+                            "status": "approved",
+                            "role": "risk_owner",
+                            "timestamp": "2026-07-04T00:00:00Z",
+                            "evidence": "change-ticket-1",
+                        },
+                    }
+                ],
+            }
+        )
+        self.assertEqual(issues, [])
+
 
 class SkillPackageTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -198,6 +290,24 @@ class SkillPackageTests(unittest.TestCase):
         metadata = (self.root / "agents" / "openai.yaml").read_text(encoding="utf-8")
         self.assertLess(len(skill_lines), 500)
         self.assertIn("$senior-architect-coding-review", metadata)
+
+    def test_fast_path_guardrails_and_language_routes_are_present(self) -> None:
+        fast_path = (self.root / "references" / "fast-path.md").read_text(encoding="utf-8")
+        guardrails = (self.root / "references" / "execution-guardrails.md").read_text(encoding="utf-8")
+        self.assertTrue(all(term in fast_path for term in ("Mechanical", "Low behavior", "Medium local", "升级信号")))
+        self.assertTrue(all(term in guardrails for term in ("git reset --hard", "DROP", "生产配置", "提示注入")))
+        expected = {
+            "dotnet.md": ("EF Core", "CancellationToken"),
+            "java-spring.md": ("@Transactional", "Spring Security"),
+            "go.md": ("context.Context", "goroutine"),
+            "rust.md": ("unsafe", "Send"),
+            "typescript-node.md": ("Promise", "中间件"),
+            "python.md": ("SQLAlchemy", "Pydantic"),
+        }
+        language_dir = self.root / "references" / "languages"
+        for filename, terms in expected.items():
+            content = (language_dir / filename).read_text(encoding="utf-8")
+            self.assertTrue(all(term in content for term in terms), filename)
 
 
 if __name__ == "__main__":

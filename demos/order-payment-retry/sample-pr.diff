@@ -1,0 +1,51 @@
+diff --git a/src/payments/retry-failed-payments.ts b/src/payments/retry-failed-payments.ts
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/payments/retry-failed-payments.ts
+@@
++import { db } from "../db";
++import { chargeOrder } from "./provider";
++
++export async function retryFailedPayments() {
++  const orders = await db.orders.findMany({
++    where: { payment_status: "failed" },
++    take: 500,
++  });
++
++  for (const order of orders) {
++    try {
++      const result = await chargeOrder({
++        orderId: order.id,
++        amount: order.total_amount,
++        currency: order.currency,
++      });
++
++      await db.orders.update({
++        where: { id: order.id },
++        data: {
++          payment_status: result.success ? "paid" : "failed",
++          provider_response: JSON.stringify(result),
++        },
++      });
++    } catch (error) {
++      await db.orders.update({
++        where: { id: order.id },
++        data: {
++          payment_status: "failed",
++          provider_response: String(error),
++        },
++      });
++    }
++  }
++}
+diff --git a/src/scheduler.ts b/src/scheduler.ts
+index 2222222..3333333 100644
+--- a/src/scheduler.ts
++++ b/src/scheduler.ts
+@@
++import { retryFailedPayments } from "./payments/retry-failed-payments";
++
++setInterval(() => {
++  retryFailedPayments();
++}, 60_000);

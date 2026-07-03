@@ -8,3 +8,5 @@
 - [Action plan](action-plan.json)：敏感写操作的范围、恢复与批准记录。
 
 示例用于校准结构和深度，不是所有项目的标准答案。
+
+如果需要端到端使用方式，请看 [../demos](../demos)。examples 偏结构样例，demos 偏真实任务输入、候选 diff 和期望审查路径。

@@ -9,6 +9,19 @@
 - 真实开源 PR fixtures 和多模型行为基线。
 - 更多框架专项规则与可复现误报/漏报报告。
 
+## [0.3.0] - 2026-07-04
+
+### Added
+
+- 可复现端到端使用 demo，展示从模糊支付重试需求到阻塞性审查结论的完整路径。
+- 详细安装文档，覆盖 Codex、Claude Code、Cursor、固定 tag、升级和排错。
+- 更完整的 Go、Rust、Python、TypeScript/Node.js 专项审查清单。
+
+### Changed
+
+- README 默认安装路径改为固定 release tag，避免用户跟随 `main` 漂移。
+- 示例索引增加 demo 入口，区分静态示例、可复现 demo 和合成评测。
+
 ## [0.2.0] - 2026-07-04
 
 ### Added

@@ -21,4 +21,20 @@
 - MQ 消费默认考虑至少一次投递、幂等、乱序、重试、死信和毒消息隔离。
 - 批处理可续跑、幂等、限制事务规模并记录进度。
 
-优先运行 Maven/Gradle 测试、静态分析、Testcontainers 或项目已有集成测试；不要仅凭注解存在断言事务或安全正确。
+## 配置、依赖与运行
+
+- 配置属性要在启动或边界处验证，区分缺失、非法和动态刷新语义。
+- Feign/WebClient/RestTemplate、JDBC、Redis、MQ client 设置端到端超时、连接池、重试预算和熔断。
+- Actuator、管理端点、debug 日志和异常响应不能泄漏 secrets、SQL、token 或内部拓扑。
+- 新 starter、AOP、注解处理器和自动配置要检查启用条件、顺序、类路径漂移和生产默认值。
+
+## 测试与证据
+
+- 最低验证：Maven/Gradle 测试和项目静态分析。
+- JPA、事务、迁移或查询改动：补 Testcontainers、执行计划、迁移兼容或回滚证据。
+- Security、filter chain 或错误契约改动：补端到端或契约测试。
+- MQ、批处理和调度任务改动：补幂等、重试、死信、关闭和重跑测试。
+
+不要仅凭注解存在断言事务或安全正确。
+
+阻塞信号：`@Transactional` 因 self-invocation 失效、远程调用包在长事务内、OSIV 掩盖 N+1、自动重试外部副作用无幂等、Security matcher 顺序导致默认放行。

@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "mode": "high-risk",
+  "permission": "review-only",
+  "risk_level": "high",
+  "summary": "候选 PR 在支付幂等、未知提交结果和审批缺失的情况下自动重新扣款，应阻塞合并并回到 discovery。",
+  "findings": [
+    {
+      "id": "PAY-001",
+      "title": "自动重试可能造成重复扣款",
+      "severity": "P1",
+      "disposition": "blocking",
+      "confidence": "high",
+      "locations": [
+        {
+          "path": "demos/order-payment-retry/sample-pr.diff",
+          "line": 12
+        }
+      ],
+      "scenario": "provider 首次扣款成功但响应超时，本地将状态写为 failed，下一轮 scheduler 再次调用 chargeOrder。",
+      "impact": "用户可能被重复扣款，账务每日对账无法实时阻断，支付和退款责任不清。",
+      "evidence": [
+        "context.md 明确未知 provider 超时语义、幂等键和重复扣款责任。",
+        "sample-pr.diff 未传递 payment_intent 或 idempotency key。"
+      ],
+      "minimal_fix": "停止自动扣款实现，先确认 provider 幂等协议和未知提交结果恢复机制，并形成 High 风险 G2 批准记录。"
+    },
+    {
+      "id": "PAY-002",
+      "title": "scheduler 缺少并发控制和停止阈值",
+      "severity": "P2",
+      "disposition": "blocking",
+      "confidence": "medium",
+      "locations": [
+        {
+          "path": "demos/order-payment-retry/sample-pr.diff",
+          "line": 37
+        }
+      ],
+      "scenario": "多个实例或 setInterval 重叠执行时，同一 failed 订单可能被重复扫描和扣款。",
+      "impact": "扩大重复扣款和 provider 限流风险，故障时无法快速止血。",
+      "evidence": [
+        "diff 中 setInterval 不等待 retryFailedPayments 完成。",
+        "查询没有租约、稳定排序或重试预算。"
+      ],
+      "minimal_fix": "在正式方案中加入租约、退避、并发上限、停止阈值和可观测指标。"
+    }
+  ],
+  "verification": [
+    {
+      "command": "read demos/order-payment-retry/context.md",
+      "status": "performed"
+    },
+    {
+      "command": "review demos/order-payment-retry/sample-pr.diff",
+      "status": "performed"
+    },
+    {
+      "command": "query real payment provider docs",
+      "status": "not_performed"
+    }
+  ],
+  "residual_risks": [
+    "未确认真实 provider 超时、幂等键和失败码语义。",
+    "未获得支付领域负责人和风险负责人的批准记录。"
+  ]
+}

@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-- 版本：`0.2.0`
+- 版本：`0.3.0`
 - 阶段：早期公开版本；尚未宣称经过大规模社区或生产验证
 - 许可证：MIT
 - 运行时包：[skill/senior-architect-coding-review](skill/senior-architect-coding-review)
@@ -28,10 +28,10 @@
 在 Codex 中调用 `$skill-installer` 安装仓库内的 Skill 路径：
 
 ```text
-$skill-installer install https://github.com/f12336414-ship-it/senior-architect-coding-review/tree/main/skill/senior-architect-coding-review
+$skill-installer install https://github.com/f12336414-ship-it/senior-architect-coding-review/tree/v0.3.0/skill/senior-architect-coding-review
 ```
 
-也可以把 `skill/senior-architect-coding-review` 复制到 `$CODEX_HOME/skills/`。`agents/openai.yaml` 是 Codex 的 UI 元数据，其他 Agent 可以忽略。
+也可以把 `skill/senior-architect-coding-review` 复制到 `$CODEX_HOME/skills/`。`agents/openai.yaml` 是 Codex 的 UI 元数据，其他 Agent 可以忽略。完整安装、固定版本、升级和排错步骤见 [docs/installation.md](docs/installation.md)。
 
 ### Claude Code
 
@@ -110,6 +110,7 @@ Cursor 2.4+ 支持 Agent Skills。将目录复制到项目的 `.cursor/skills/` 
 ## 示例与评测
 
 - 行为示例：[examples](examples)
+- 端到端使用 demo：[demos](demos)
 - 评测用例与执行器：[evals](evals)
 - 当前评测仅提供可重复的合成基线，不冒充真实多模型或生产验证报告。
 - 验证范围与尚未验证项：[docs/validation-status.md](docs/validation-status.md)

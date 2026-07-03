@@ -1,0 +1,4 @@
+interface:
+  display_name: "资深架构师开发与审查"
+  short_description: "以需求发现、独立反证、证据裁决和风险治理驱动架构开发与审查"
+  default_prompt: "使用 $senior-architect-coding-review 先澄清并反证需求，通过设计门禁后再完成架构设计、开发或审查。"

@@ -12,13 +12,13 @@
 推荐使用 `$skill-installer` 安装固定版本：
 
 ```text
-$skill-installer install https://github.com/f12336414-ship-it/senior-architect-coding-review/tree/v0.3.0/skill/senior-architect-coding-review
+$skill-installer install https://github.com/f12336414-ship-it/senior-architect-coding-review/tree/v0.4.0/skill/senior-architect-coding-review
 ```
 
 手动安装也可以：
 
 ```bash
-git clone --depth 1 --branch v0.3.0 https://github.com/f12336414-ship-it/senior-architect-coding-review.git
+git clone --depth 1 --branch v0.4.0 https://github.com/f12336414-ship-it/senior-architect-coding-review.git
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R senior-architect-coding-review/skill/senior-architect-coding-review "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
@@ -26,7 +26,7 @@ cp -R senior-architect-coding-review/skill/senior-architect-coding-review "${COD
 Windows PowerShell 手动安装示例：
 
 ```powershell
-git clone --depth 1 --branch v0.3.0 https://github.com/f12336414-ship-it/senior-architect-coding-review.git
+git clone --depth 1 --branch v0.4.0 https://github.com/f12336414-ship-it/senior-architect-coding-review.git
 $target = if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME "skills" } else { Join-Path $HOME ".codex\skills" }
 New-Item -ItemType Directory -Force $target | Out-Null
 Copy-Item -Recurse -Force "senior-architect-coding-review\skill\senior-architect-coding-review" $target

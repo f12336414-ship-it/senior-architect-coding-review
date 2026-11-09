@@ -1,0 +1,191 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "d4766690bdce2d41c1d416016f2a12253149fce1",
+  "skill_revision": "uncommitted worktree changes identified by skill_files hashes",
+  "runtime": "Codex desktop collaboration subagents, independent contexts (fork_turns=none)",
+  "model_version": "inherited; exact backend model build not exposed by delegation tool",
+  "os": "Windows",
+  "python": "3.13.13",
+  "runs_per_scenario": 1,
+  "authorization": "isolated temporary scenario directories only; no external service calls, no production data, no installed-skill changes by evaluating agents",
+  "evidence_scope": "saved final response content (formatting normalized), generated code and added tests, root rerun output; not complete tool transcripts",
+  "skill_files": [
+    {
+      "path": "agents/openai.yaml",
+      "sha256": "b119e201049e15d94fac1cebc89a4cbc4ec0a0e0407509bd89d64efe14aa12d9"
+    },
+    {
+      "path": "references/adr-template.md",
+      "sha256": "67bc287fd566757d71b4b75134c5cc1672410faa21d698b21c11e107734d5b00"
+    },
+    {
+      "path": "references/adversarial-review.md",
+      "sha256": "22cda2d6903cd22af449740c4e1828b6533002d56bc4ecc05dbf81d682f047b7"
+    },
+    {
+      "path": "references/architecture-decision-loop.md",
+      "sha256": "f7b8d331130dcd0c90d04cfbccf488fdf06af0652fe3d812a89e877aa4e5f1fc"
+    },
+    {
+      "path": "references/book-router.md",
+      "sha256": "6f935717f6df79a286a373992a85a5d6c9fcf2b5f05de36c070d8213404386b2"
+    },
+    {
+      "path": "references/coding-workflow.md",
+      "sha256": "00495af7b6cc5eca563903a303a2dc4153e3164f83038a997f98d6299f7306ae"
+    },
+    {
+      "path": "references/design-gates.md",
+      "sha256": "fd5306f9cb62c433904f95cc09b4b133885d04a33e9c3b644788f6724ce1bdfe"
+    },
+    {
+      "path": "references/domain-data.md",
+      "sha256": "8f45d1ede4a2289d8c7f2bc9f2d4849fa5815ce633041c6188f6c1ef86b486af"
+    },
+    {
+      "path": "references/evolution-migration.md",
+      "sha256": "f492171876e7752415bc4c35fb0c04b60e9920fb37a45a9e586aa2f62b2e6871"
+    },
+    {
+      "path": "references/execution-guardrails.md",
+      "sha256": "63758c62f54a85340bd4c961260af019446c80379e98a1a3a5fb3760c61ff230"
+    },
+    {
+      "path": "references/fast-path.md",
+      "sha256": "860ca623c9a71fe8197d7aa7c18c7545d0ba02cff3e56532091d2ed35d58fab8"
+    },
+    {
+      "path": "references/language-routing.md",
+      "sha256": "9bbceb235b0cb9337e2b96a788dcfd25ee3a1c00ba329712405d21ff43d0a696"
+    },
+    {
+      "path": "references/languages/dotnet.md",
+      "sha256": "08a00231886dfe8984e14007aef82cf5032a4c50c4b59a4faa9f078185082878"
+    },
+    {
+      "path": "references/languages/go.md",
+      "sha256": "8ed7a1e4a5feb533c07780587641dd1ccbe96bfeeae45efdf94186143b1e9e2c"
+    },
+    {
+      "path": "references/languages/java-spring.md",
+      "sha256": "47756717c5f0e5ed4609009bd2f905582760f18682b4393961cb9220a5487a75"
+    },
+    {
+      "path": "references/languages/python.md",
+      "sha256": "7fdb30ddfb744187e50c404f7dc062d4414e8eb4574d96bbb9ff585e496e94fb"
+    },
+    {
+      "path": "references/languages/rust.md",
+      "sha256": "83aa37837f9d3039987653005ce4ba3fc0214eb03096a20d62368806853fdcbb"
+    },
+    {
+      "path": "references/languages/typescript-node.md",
+      "sha256": "d3ce7e6bff9126cf3502976280b69825047ea51dfa6f58ae39462308e4be83a6"
+    },
+    {
+      "path": "references/output-contract.md",
+      "sha256": "95df5722f767e83128d3270ee65d218403e205467e8af1a5da9b6507e39ef9a5"
+    },
+    {
+      "path": "references/project-context.md",
+      "sha256": "75afcfd3b77f1f1e82efa4030f1090f57d928257b6358a6f424f2d5ed3189b54"
+    },
+    {
+      "path": "references/reliability-security.md",
+      "sha256": "36a7c2af76f8494b7332922b93fe083a284f106fe5837b9399f010345db86c4d"
+    },
+    {
+      "path": "references/requirement-discovery.md",
+      "sha256": "9f9e3380e9e51a5098b114830decae2167b3527ddd29f05f162c906a8c2b6080"
+    },
+    {
+      "path": "references/reuse-and-structure.md",
+      "sha256": "d91d6f638a7c79456173f5e56fb61ca413cdc813bf893f8e9d8586f368476cbe"
+    },
+    {
+      "path": "references/review-rubric.md",
+      "sha256": "99ea8d6c98b5c0638f835ed7b157025b27217b215ddafd72d80ab0b10dedf29e"
+    },
+    {
+      "path": "references/risk-profiles.md",
+      "sha256": "1f0929a56c93d2028a33c6df289043d34208961dc27a2ec9140eed9bf63bd62e"
+    },
+    {
+      "path": "references/risk-severity.md",
+      "sha256": "a1657c14917fb34afaf571950f149c297960d3abaa53470b66657eb2a9fd57df"
+    },
+    {
+      "path": "references/skill-composition.md",
+      "sha256": "4902d95e1c7a55cda9c4f5b01adfaf74f076ef84cad0bceb0d272de6acf418fa"
+    },
+    {
+      "path": "references/tool-routing.md",
+      "sha256": "277c54727071723314a2beac05edb8320c87a721bfe069762c154fa551017a8b"
+    },
+    {
+      "path": "scripts/assess_change_risk.py",
+      "sha256": "170eb86d8f5e4bf93046fccd21cebcc83fc661522f269eed3fd768ce2867e208"
+    },
+    {
+      "path": "scripts/detect_project_capabilities.py",
+      "sha256": "7ff3feb42658420f06172b702cfb2967f2d90d2519930d24bce5325d848066bf"
+    },
+    {
+      "path": "scripts/tests/test_scripts.py",
+      "sha256": "5880af15f6996a8482fc40917b0486b33c44a1071f00fe1d9293f6c26257c8eb"
+    },
+    {
+      "path": "scripts/validate_action_plan.py",
+      "sha256": "bc2269dcc87adf406b09dcc89afb2e766876b37b55cbc396f14f797adc6ba377"
+    },
+    {
+      "path": "scripts/validate_artifact_structure.py",
+      "sha256": "50a6efe2dc4561f2b2d026e38c07108884274c571c1bca5a737241cee2a1fe8d"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "a02e6f99de9dc1492fa74d098c7efb683cde28484847aa1f8acbdd0366af4a33"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "local-write",
+      "baseline_exit_code": 1,
+      "baseline_errors": 9,
+      "original_test_methods": 6,
+      "final_test_methods": 11,
+      "final_exit_code": 0,
+      "result": "bounded write implemented; existing get_note reused; caller transaction retained"
+    },
+    {
+      "id": "csv-export",
+      "baseline_exit_code": 1,
+      "baseline_errors": 4,
+      "original_test_methods": 5,
+      "final_test_methods": 8,
+      "final_exit_code": 0,
+      "result": "existing _csv_text and stdlib csv reused"
+    },
+    {
+      "id": "shared-rules",
+      "baseline_exit_code": 1,
+      "baseline_errors": 42,
+      "original_test_methods": 3,
+      "final_test_methods": 7,
+      "final_exit_code": 0,
+      "result": "Ticket remains shared rule owner; existing entrypoints unchanged"
+    },
+    {
+      "id": "payment-unknown",
+      "result": "discovery; G1 NOT_READY; asks about idempotency and unknown commit status; no implementation change",
+      "input_and_output_sha256": "509e3920aa6c73425152cd9e6318398825cde3392740109f63666a4503a30272"
+    }
+  ],
+  "limitations": [
+    "handcrafted Python tasks, not production PRs",
+    "one run per scenario; no old-vs-new model A/B",
+    "same runtime family, no multi-model or human expert review",
+    "no C#/.NET or other framework live runs",
+    "saved-artifact replay does not invoke or validate future model generations"
+  ]
+}

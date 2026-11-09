@@ -1,0 +1,16 @@
+Root replay command: python -X utf8 -B -m unittest discover -s . -p 'test_*.py' -v
+Exit code: 0
+
+test_empty (test_exports.ExportTests.test_empty) ... ok
+test_existing_export (test_exports.ExportTests.test_existing_export) ... ok
+test_one_shot_iterator (test_exports.ExportTests.test_one_shot_iterator) ... ok
+test_simple (test_exports.ExportTests.test_simple) ... ok
+test_special_fields_round_trip (test_exports.ExportTests.test_special_fields_round_trip) ... ok
+test_empty_one_shot_iterator (test_people_boundaries.PeopleBoundaryTests.test_empty_one_shot_iterator) ... ok
+test_exact_escaping_and_record_terminator (test_people_boundaries.PeopleBoundaryTests.test_exact_escaping_and_record_terminator) ... ok
+test_special_values_in_both_fields_preserved (test_people_boundaries.PeopleBoundaryTests.test_special_values_in_both_fields_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK

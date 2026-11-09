@@ -1,0 +1,17 @@
+Agent 最终回复留档：仅移除绝对路径链接及 Markdown 样式；不是完整交互日志。
+
+已实现并通过测试，采用 `medium-local` 快速路径，无需澄清或正式架构设计。
+
+实际修改：
+
+- notes.py：校验并裁剪标题，参数化更新，复用 get_note 返回字典或抛 KeyError；不提交、不回滚。
+- test_notes_edges.py：新增 5 项测试；原测试未修改。
+
+验证：
+
+- python -m unittest discover -s . -p "test_*.py" -v：修改前退出码 1（未实现）；修改后退出码 0，11 项通过。
+- python -m py_compile notes.py test_notes.py test_notes_edges.py：退出码 0。
+
+反证结果：同名更新、Unicode 空白、SQL 特殊字符、缺失记录、写入被拒绝及调用方事务保留均有通过证据；未新增依赖、分层或 schema 变更。
+
+限制：完成作者第二遍检查，但没有独立审查者，Skill 要求的独立第二遍复核未完成。测试只覆盖本地内存 SQLite，不代表磁盘故障或生产可靠性验证。

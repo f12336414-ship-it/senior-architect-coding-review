@@ -1,0 +1,15 @@
+Root replay command: python -X utf8 -B -m unittest discover -s . -p 'test_*.py' -v
+Exit code: 0
+
+test_all_state_pairs (test_tickets.TransitionTests.test_all_state_pairs) ... ok
+test_both_entries_share_rules (test_tickets.TransitionTests.test_both_entries_share_rules) ... ok
+test_rejection_then_valid_transition (test_tickets.TransitionTests.test_rejection_then_valid_transition) ... ok
+test_constructor_contract_is_unchanged (test_transition_contract.TransitionContractTests.test_constructor_contract_is_unchanged) ... ok
+test_direct_transition_returns_none (test_transition_contract.TransitionContractTests.test_direct_transition_returns_none) ... ok
+test_shared_instance_round_trip_and_return_values (test_transition_contract.TransitionContractTests.test_shared_instance_round_trip_and_return_values) ... ok
+test_unknown_targets_preserve_entire_ticket (test_transition_contract.TransitionContractTests.test_unknown_targets_preserve_entire_ticket) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.003s
+
+OK

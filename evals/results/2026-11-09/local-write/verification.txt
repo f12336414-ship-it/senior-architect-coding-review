@@ -1,0 +1,19 @@
+Root replay command: python -X utf8 -B -m unittest discover -s . -p 'test_*.py' -v
+Exit code: 0
+
+test_caller_can_rollback (test_notes.RenameTests.test_caller_can_rollback) ... ok
+test_failure_does_not_rollback_caller_work (test_notes.RenameTests.test_failure_does_not_rollback_caller_work) ... ok
+test_invalid_title_does_not_write (test_notes.RenameTests.test_invalid_title_does_not_write) ... ok
+test_missing_record (test_notes.RenameTests.test_missing_record) ... ok
+test_quote_is_data (test_notes.RenameTests.test_quote_is_data) ... ok
+test_rename_and_preserve_other_record (test_notes.RenameTests.test_rename_and_preserve_other_record) ... ok
+test_database_error_preserves_caller_work (test_notes_edges.RenameEdgeTests.test_database_error_preserves_caller_work) ... ok
+test_missing_keeps_caller_work_uncommitted (test_notes_edges.RenameEdgeTests.test_missing_keeps_caller_work_uncommitted) ... ok
+test_same_title_is_not_missing (test_notes_edges.RenameEdgeTests.test_same_title_is_not_missing) ... ok
+test_success_keeps_caller_work_uncommitted (test_notes_edges.RenameEdgeTests.test_success_keeps_caller_work_uncommitted) ... ok
+test_trim_unicode_edges_preserves_internal_space (test_notes_edges.RenameEdgeTests.test_trim_unicode_edges_preserves_internal_space) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.004s
+
+OK

@@ -1,0 +1,18 @@
+Agent 最终回复留档：仅移除绝对路径链接及 Markdown 样式；不是完整交互日志。
+
+路径：low-behavior，无需澄清或正式架构门禁。
+
+修改：
+
+- exports.py：一行实现 export_people，复用 _csv_text；未改共享函数及 export_projects。
+- test_people_boundaries.py：新增 3 项测试；原测试未修改。
+
+验证（场景目录内执行）：
+
+- python -m unittest discover -s . -p "test_*.py" -v：基线退出码 1（4 项未实现错误）；修改后退出码 0，8/8 通过。
+- python -m py_compile exports.py test_exports.py test_people_boundaries.py：退出码 0。
+- 独立执行的反例探针：拒绝二次遍历的输入、双字段特殊字符、项目导出空输入及生成器，退出码 0。
+
+反证结果：未发现当前契约内问题；CRLF、转义、Unicode、空输入及原值保留均有验证。=1+1 按要求原样保留，不宣称电子表格公式安全。仅完成隔离自审，没有独立审查者或外部消费者兼容验证。
+
+另：首次组合读取/探针命令退出码 1、无输出；拆分后正常完成，未将该失败调用计为验证成功。

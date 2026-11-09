@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-- 版本：`0.3.0`
+- 版本：`0.4.0`；变更与升级注意事项见 [Changelog](CHANGELOG.md)
 - 阶段：早期公开版本；尚未宣称经过大规模社区或生产验证
 - 许可证：MIT
 - 运行时包：[skill/senior-architect-coding-review](skill/senior-architect-coding-review)
@@ -28,7 +28,7 @@
 在 Codex 中调用 `$skill-installer` 安装仓库内的 Skill 路径：
 
 ```text
-$skill-installer install https://github.com/f12336414-ship-it/senior-architect-coding-review/tree/v0.3.0/skill/senior-architect-coding-review
+$skill-installer install https://github.com/f12336414-ship-it/senior-architect-coding-review/tree/v0.4.0/skill/senior-architect-coding-review
 ```
 
 也可以把 `skill/senior-architect-coding-review` 复制到 `$CODEX_HOME/skills/`。`agents/openai.yaml` 是 Codex 的 UI 元数据，其他 Agent 可以忽略。完整安装、固定版本、升级和排错步骤见 [docs/installation.md](docs/installation.md)。
@@ -79,6 +79,8 @@ Cursor 2.4+ 支持 Agent Skills。将目录复制到项目的 `.cursor/skills/` 
 
 风险治理不会用低风险项平均掉身份、数据、兼容或不可逆风险。High 需要领域负责人确认；Critical 需要领域负责人、专业审查者和风险负责人批准，并禁止代理自行执行。
 
+所有编码路径先核对项目已有代码、框架、标准库和官方 SDK。结构由共同变化、规则所有权和真实隔离需求决定，不默认生成 Work/Domain 或 Controller/Service/Repository。新增抽象接受“删除后是否丢失必要语义”的反证，详见 [复用与结构选择](skill/senior-architect-coding-review/references/reuse-and-structure.md)。
+
 ## 项目级上下文
 
 本 Skill 需要项目事实才能作出准确判断。复制并调整：
@@ -112,7 +114,7 @@ Cursor 2.4+ 支持 Agent Skills。将目录复制到项目的 `.cursor/skills/` 
 - 行为示例：[examples](examples)
 - 端到端使用 demo：[demos](demos)
 - 评测用例与执行器：[evals](evals)
-- 当前评测仅提供可重复的合成基线，不冒充真实多模型或生产验证报告。
+- [真实执行型小任务与保存的 Agent 输出](evals/README.md)：覆盖局部写入、已有能力复用、共享规则和高风险需求阻塞；不冒充生产 PR 或多模型验证。
 - 验证范围与尚未验证项：[docs/validation-status.md](docs/validation-status.md)
 
 ## 开发与验证

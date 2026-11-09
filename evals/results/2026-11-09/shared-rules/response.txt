@@ -1,0 +1,18 @@
+Agent 最终回复留档：仅移除绝对路径链接及 Markdown 样式；不是完整交互日志。
+
+已实现，采用 medium-local 路径：复用 Ticket.transition 作为规则唯一入口，无新增分层、依赖或接口变更。
+
+修改文件：
+
+- tickets.py：实现允许转换、同状态 no-op、非法目标抛 ValueError；校验完成后才更新状态。
+- test_transition_contract.py：新增返回值、退回流程、非法输入不修改对象和构造契约测试。
+- 未修改现有入口、原测试或安装副本；测试生成了 Python 缓存。
+
+实际验证：
+
+- python -m unittest discover -s . -p "test_*.py" -v：修改前退出码 1，42 个错误；修改后退出码 0，7 项测试通过。
+- python -m py_compile tickets.py entrypoints.py test_tickets.py test_transition_contract.py：退出码 0。
+
+反证结果：全状态对测试覆盖两个入口；未知目标、终态退出、失败后状态保留、重复调用和返回值均通过。无需重复规则或引入状态机依赖。
+
+限制：公开 state 属性仍可被直接赋值，按保持接口要求未改变。完成了自审，但没有独立第二遍复核；请主任务独立复核，不宣称满足该项保证。

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Score recorded Agent responses against transparent behavioral assertions."""
+"""Check response contracts with keywords; this is not semantic code evaluation."""
 
 from __future__ import annotations
 
@@ -63,6 +63,8 @@ def evaluate(cases: list[dict[str, Any]], responses: dict[str, dict[str, Any]]) 
         metric["passed"] += int(item["passed"])
 
     return {
+        "evaluation_scope": "response_contract_smoke",
+        "semantic_correctness_verified": False,
         "total": len(results),
         "passed": passed,
         "pass_rate": passed / len(results) if results else 0,

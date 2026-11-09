@@ -1,0 +1,63 @@
+Commands run from repository root unless indicated. All below exited 0.
+
+[unit_scripts] exit=0
+test_approved_sensitive_action_can_pass_structural_policy (test_scripts.ActionPlanTests.test_approved_sensitive_action_can_pass_structural_policy) ... ok
+test_destructive_command_requires_complete_approval_and_recovery (test_scripts.ActionPlanTests.test_destructive_command_requires_complete_approval_and_recovery) ... ok
+test_out_of_scope_and_test_bypass_are_blocked (test_scripts.ActionPlanTests.test_out_of_scope_and_test_bypass_are_blocked) ... ok
+test_blocking_unknown_acceptance_requires_risk_owner_evidence (test_scripts.ArtifactValidationTests.test_blocking_unknown_acceptance_requires_risk_owner_evidence) ... ok
+test_blocking_unknown_fails (test_scripts.ArtifactValidationTests.test_blocking_unknown_fails) ... ok
+test_closed_attack_requires_evidence (test_scripts.ArtifactValidationTests.test_closed_attack_requires_evidence) ... ok
+test_critical_g2_requires_risk_and_specialist_approval (test_scripts.ArtifactValidationTests.test_critical_g2_requires_risk_and_specialist_approval) ... ok
+test_g2_requires_two_candidates (test_scripts.ArtifactValidationTests.test_g2_requires_two_candidates) ... ok
+test_selected_option_must_reference_candidate (test_scripts.ArtifactValidationTests.test_selected_option_must_reference_candidate) ... ok
+test_valid_g1_passes (test_scripts.ArtifactValidationTests.test_valid_g1_passes) ... ok
+test_valid_g3_passes_and_unowned_residual_risk_fails (test_scripts.ArtifactValidationTests.test_valid_g3_passes_and_unowned_residual_risk_fails) ... ok
+test_valid_high_risk_g2_passes (test_scripts.ArtifactValidationTests.test_valid_high_risk_g2_passes) ... ok
+test_detects_package_scripts_and_architecture_config (test_scripts.CapabilityDiscoveryTests.test_detects_package_scripts_and_architecture_config) ... ok
+test_detects_pipeline_infrastructure_and_migration (test_scripts.CapabilityDiscoveryTests.test_detects_pipeline_infrastructure_and_migration) ... ok
+test_authorization_change_is_at_least_high (test_scripts.RiskClassificationTests.test_authorization_change_is_at_least_high) ... ok
+test_finance_write_and_privileged_agent_escalate (test_scripts.RiskClassificationTests.test_finance_write_and_privileged_agent_escalate) ... ok
+test_irreversible_change_is_critical_and_blocked (test_scripts.RiskClassificationTests.test_irreversible_change_is_critical_and_blocked) ... ok
+test_production_migration_is_not_low (test_scripts.RiskClassificationTests.test_production_migration_is_not_low) ... ok
+test_unknown_requirements_block_execution (test_scripts.RiskClassificationTests.test_unknown_requirements_block_execution) ... ok
+test_fast_path_guardrails_and_language_routes_are_present (test_scripts.SkillPackageTests.test_fast_path_guardrails_and_language_routes_are_present) ... ok
+test_local_markdown_links_exist (test_scripts.SkillPackageTests.test_local_markdown_links_exist) ... ok
+test_skill_is_concise_and_metadata_mentions_skill (test_scripts.SkillPackageTests.test_skill_is_concise_and_metadata_mentions_skill) ... ok
+test_text_files_are_utf8 (test_scripts.SkillPackageTests.test_text_files_are_utf8) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.060s
+
+OK
+
+[evals_and_replay] exit=0
+test_synthetic_fixture_passes (test_evals.EvalHarnessTests.test_synthetic_fixture_passes) ... ok
+test_csv_export (test_recorded_outputs.RecordedOutputTests.test_csv_export) ... ok
+test_local_write (test_recorded_outputs.RecordedOutputTests.test_local_write) ... ok
+test_shared_rules (test_recorded_outputs.RecordedOutputTests.test_shared_rules) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.594s
+
+OK
+
+[unit_tools] exit=0
+test_advisory_does_not_block (test_tools.ReviewGateTests.test_advisory_does_not_block) ... ok
+test_p1_blocking_fails_gate (test_tools.ReviewGateTests.test_p1_blocking_fails_gate) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+
+[repository_validation] exit=0
+{"valid": true, "skill_lines": 152}
+
+[skill_validation] exit=0
+Skill is valid!
+
+[whitespace] exit=0
+
+
+Installation verification: SHA-256 of all 7 changed runtime files matched source in both Codex and Claude Code user-level skill directories. Existing unrelated metadata was left untouched.
+No git commit, push, tag or release performed.
